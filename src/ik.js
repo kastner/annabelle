@@ -6,9 +6,9 @@
   // Specific geometry for bitbeambot:
   // http://flic.kr/p/cYaQah
   var e = 83.138;
-  var f = 103.9;
-  var re = 8 * 18;
-  var rf = 8 * 7;
+  var f = 150;
+  var re = 150;
+  var rf = 52.7;
 
   exports.updateSize = function(parameters) {
     e = parameters[0];
