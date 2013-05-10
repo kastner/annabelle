@@ -3,13 +3,35 @@ ik = require("./ik");
 board = new five.Board({
   debug: false
 });
+
 require("sylvester");
+
+var hand = new (function() {
+    var curPosition = null, lastPosition = {x:0,y:0,z:0}; // track the diff btwn taken positions
+
+    this.takePosition = function() {
+      if (!curPosition) { 
+        return {x:0,y:0,z:0}; 
+      } else {
+        var position = {};
+        position.x = parseInt((10000 * (curPosition.x - lastPosition.x)) / 100.0);
+        position.y = parseInt((10000 * (curPosition.y - lastPosition.y)) / 100.0);
+        position.z = parseInt((10000 * (curPosition.z - lastPosition.z)) / 100.0);
+        lastPosition = curPosition;
+        return position;
+      }
+    }
+    require('leapjs').Leap.loop(function(frame) {
+      var handIdxs = Object.keys(frame.handsMap);
+      curPosition = frame.handsMap[handIdxs[0]].palmNormal;
+    });
+  });
 
 var app = require('http').createServer(handler),
   io = require('socket.io').listen(app, {
     log: false
   }),
-  fs = require('fs')
+  fs = require('fs');
 
   board.on("ready", function() {
     var servo1 = five.Servo({
@@ -54,6 +76,22 @@ var app = require('http').createServer(handler),
       if (dancer) {
         clearInterval(dancer);
         dancer = null;
+      }
+    }
+
+    var leap_track = function() {
+      var pos = hand.takePosition();
+      go(pos.x, pos.y, pos.z);
+    }
+
+    start_leap_tracker = function() {
+      if (!leap_tracker) leap_tracker = setInterval(leap_track, 500);
+    }
+
+    stop_leap_tracker = function() {
+      if (leap_tracker) {
+        clearInterval(leap_tracker);
+        leap_tracker = null;
       }
     }
 
