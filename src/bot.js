@@ -1,3 +1,6 @@
+var exec = require('child_process').exec;
+var crypto = require('crypto');
+
 five = require("johnny-five");
 ik = require("./ik");
 paint = require('./paint.js');
@@ -134,6 +137,8 @@ app.listen(8011);
 
 myIo = io;
 
+// paint.useMagBot();
+
 function handler(req, res) {
   var file = "/client.html",
     type = "text/html";
@@ -141,9 +146,39 @@ function handler(req, res) {
   if (req.url == "/control") {
     file = "/control.html";
   }
+  if (req.url == "/draw") {
+    file = "/draw.html";
+  }
   if (req.url == "/tweetscreen.png") {
     file = "/tweetscreen.png";
     type = "image/png";
+  }
+
+  if ((matches = req.url.match(/processed\/([a-z0-9]+\.png)/))) {
+    fs.readFile(__dirname + '/../' + matches[1], function (err, data) {
+      if (err) { console.log(err); res.writeHead(404); return res.end('Not found'); }
+      res.writeHead(200, {'Content-Type': 'image/png'});
+      res.end(data);
+    });
+  }
+  if ((matches = req.url.match(/process\?imageUrl=(.*)/))) {
+    // process the image, then maybe draw it
+    // console.log(req);
+    // console.log(matches);
+
+    // fetch the image
+    // process it
+    var md5sum = crypto.createHash('md5');
+    md5sum.update(matches[1]);
+    var fname = md5sum.digest('hex');
+    doneImage = false;
+    exec("./src/fetch.sh " + matches[1] + " " + fname, function (err, stdout, stderr) {
+      console.log(err);
+      console.log(stdout);
+      console.log(stderr);
+    });
+
+    res.end(fname);
   }
 
   fs.readFile(__dirname + file,
@@ -186,6 +221,10 @@ io.sockets.on('connection', function(socket) {
   socket.on('up', function() {
     moveZ(safeZ);
   });
+
+  socket.on('paint', function (data) {
+    paint.drawPng(data.name);
+  })
 });
 
 isCalibrating = false;

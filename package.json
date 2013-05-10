@@ -34,6 +34,7 @@
       "socket.io":"0.9.11",
       "sylvester":"0.0.21",
       "png-js":"0.1.1",
+      "pngjs": "0.4.0-alpha",
       "leapjs":"git://github.com/leapmotion/leapjs.git",
       "underscore": "*"
    },

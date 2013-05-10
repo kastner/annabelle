@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head lang="en">
+  <meta charset="utf-8">
+  <meta http-equiv="content-type" content="text/html;">
+  <title>Do it pretty!</title>
+  <meta name="robots" content="index,follow">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+
+  <script>
+    var socket = io.connect();
+    socket.on('news', function (data) {
+      console.log(data);
+      socket.emit('device info', { "foo": "bar", "height": window.innerHeight, "width": window.innerWidth, orientation: window.orientation });
+    });
+
+    socket.on('reload', function (data) {
+      window.location = window.location;
+    });
+  </script>
+  <style>
+    body { margin: 0; padding: 0; height: 100%; }
+  </style>
+</head>
+<body>
+  <form id="imageIt">
+    <label for="imageUrl">Image (url)</label>
+    <input type="text" name="imageUrl" id="imageUrl">
+  </form>
+  <div id="images">
+  </div>
+  <script>
+    jQuery(function ($) {
+      function getIt(name) {
+        var img = new Image();
+        img.onload = function () {
+          console.log("Loaded!");
+          console.log(img);
+          newImg = $("<img src='" + img.src + "'>");
+          $(newImg).click(function (e) {
+            alert("Make it!");
+            socket.emit('paint', {'name': name});
+          })
+          $("#images").append(newImg);
+        }
+        img.onerror = function (e) {
+          console.log("ERROR ");
+          console.log(e);
+          setTimeout(function() {getIt(name)}, 400);
+        }
+        img.src = '/processed/' + name + '.png';
+      }
+      $("#imageIt").on("submit", function (e) {
+        e.preventDefault();
+
+        var imageUrl = $("#imageUrl").val();
+        $("#images").html("Images!")
+          .append($("<img src='" + imageUrl + "'>"));
+
+        $.get("process?imageUrl=" + imageUrl, function (name) {
+          getIt(name);
+        });
+
+        return false;
+      })
+    });
+  </script>
+</body>
+</html>
