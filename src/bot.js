@@ -1,5 +1,6 @@
 five = require("johnny-five");
 ik = require("./ik");
+paint = require('./paint.js');
 board = new five.Board({
   debug: false
 });
@@ -78,7 +79,7 @@ go = function(x, y, z) {
   s1.move(angles[1]);
   s2.move(angles[2]);
   s3.move(angles[3]);
-  console.log(angles);
+  // console.log(angles);
 }
 
 position = function() {
@@ -258,3 +259,5 @@ moveDownUntilTap = function(err, callback) {
     }
   }, 500);
 }
+
+
