@@ -33,7 +33,9 @@
       "johnny-five":"git://github.com/voodootikigod/johnny-five.git",
       "socket.io":"0.9.11",
       "sylvester":"0.0.21",
-      "png-js":"0.1.1"
+      "png-js":"0.1.1",
+      "leapjs":"git://github.com/leapmotion/leapjs.git",
+      "underscore": "*"
    },
    "devDependencies":{
       "grunt-contrib-jasmine":"~0.4.0",
