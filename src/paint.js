@@ -2,8 +2,8 @@
   var PNG = require('png-js');
 
   var start_time, start_pos, target, total_time, i_target,
-    z_up = -160,
-    z_down = -170,
+    z_up = -153,
+    z_down = -163,
     speed = 20;
 
   painting = false;
@@ -44,7 +44,6 @@
     // console.log("---");
 
     for (var i=0; i<distance; i++) {
-      var pct = i/distance;
       // console.log("adding");
       moveQueue.push([i * ((x - startX)/distance) + startX, i * ((y - startY)/distance) + startY, i * ((z - startZ)/distance) + startZ]);
       // console.log([i * ((x - startX)/distance) + startX, i * ((y - startY)/distance) + startY, i * ((z - startZ)/distance) + startZ]);
@@ -164,6 +163,13 @@
             exports.G0(x - 40, y - 40, z_down);
             str += "*"
           }
+        }
+        if (y % 2 == 0) {
+          exports.G0(x - 40, y - 40, -130);
+          exports.G0(70, -5, -130);
+          exports.G0(50, -15, -160);
+          exports.G0(70, -5, -130);
+          exports.G0(x - 40, y - 40, -130);
         }
         console.log(str);
         // return;
