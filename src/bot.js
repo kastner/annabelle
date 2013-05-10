@@ -1,6 +1,8 @@
 five = require("johnny-five");
 ik = require("./ik");
 paint = require('./paint.js');
+ballet = require('./ballet.js');
+gcode = require('./gcode.js');
 board = new five.Board({
   debug: false
 });

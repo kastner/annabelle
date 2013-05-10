@@ -17,19 +17,20 @@
   exports.currentY = function () { position()[2]; }
   exports.currentZ = function () { position()[3]; }
 
+  exports.lastPosition = function () {
+    if (moveQueue.length) {
+      return moveQueue[moveQueue.length - 1];
+    } else {
+      return position().slice(1, 4);
+    }
+  }
+
   exports.G0 = function (x, y, z) {
     // LONGEST linear path from here to there, ignoring z
-    if (moveQueue.length) {
-      lastMove = moveQueue[moveQueue.length - 1];
-      startX = lastMove[0];
-      startY = lastMove[1];
-      startZ = lastMove[2];
-    } else {
-      pos = position()
-      startX = pos[1];
-      startY = pos[2];
-      startZ = pos[3];
-    }
+    lastMove = exports.lastPosition();
+    startX = lastMove[0];
+    startY = lastMove[1];
+    startZ = lastMove[2];
 
     xDist = Math.abs(startX - x);
     yDist = Math.abs(startY - y);
