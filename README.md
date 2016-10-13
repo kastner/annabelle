@@ -36,4 +36,4 @@ Run the following [grunt](http://gruntjs.com/) command to execute testing and co
 
     grunt test
 
-Put all [jasmine](http://pivotal.github.io/jasmine/) specs in the `spec` folder.
+Put all [jasmine](https://jasmine.github.io/) specs in the `spec` folder.
